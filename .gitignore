@@ -15,3 +15,10 @@ makefile
 *.log
 output/
 *.png
+
+# More AMRVAC build products
+amrvac.h
+mod_usr.f
+
+# Keep final figures for the presentation
+!figures/*.png
