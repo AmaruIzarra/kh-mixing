@@ -2,6 +2,7 @@ cmyt==2.0.4
 contourpy==1.4.0
 cycler==0.12.1
 ewah_bool_utils==1.3.2
+f90nml==1.5.0
 fonttools==4.66.1
 kiwisolver==1.5.1
 matplotlib==3.11.2
