@@ -37,7 +37,7 @@ mpirun -np 4 ./amrvac -i amrvac.par
 
 From the repo root, with `.venv` active:
 ```bash
-python plot_snapshot.py kh2d/kh_2d0015.dat
+python scripts/plot_snapshot.py kh2d/kh_2d0015.dat
 ```
 
 ## Repo conventions
