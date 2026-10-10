@@ -1,0 +1,16 @@
+# Python environment
+.venv/
+__pycache__/
+
+# AMRVAC build products
+amrvac
+*.o
+*.mod
+lib/
+makefile
+
+# Simulation output (too big for GitHub)
+*.dat
+*.vtu
+*.log
+output/
