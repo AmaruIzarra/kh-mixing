@@ -9,7 +9,7 @@ On Windows, use WSL and keep everything in your Linux home (`~/...`), not under 
 
 ```bash
 cd ~/codes
-git clone https://github.com/<username>/kh-mixing.git
+git clone https://github.com/AmaruIzarra/kh-mixing.git
 cd kh-mixing
 python3 -m venv .venv
 source .venv/bin/activate
