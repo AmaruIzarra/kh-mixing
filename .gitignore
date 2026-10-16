@@ -22,3 +22,4 @@ mod_usr.f
 
 # Keep final figures for the presentation
 !figures/*.png
+local/

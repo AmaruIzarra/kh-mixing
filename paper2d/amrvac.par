@@ -1,9 +1,9 @@
-! KH mixing layer, Hillier & Arregui (2019) setup, 2.5D MHD
+! REFERENCE RUN: KH mixing layer, Hillier & Arregui (2019), 2.5D MHD, hlld + cada3, paper's random seed
 ! Compile: $AMRVAC_DIR/setup.pl -d=2 -v=3 && make -j 4
 ! Run:     mkdir -p output && mpirun -np 4 ./amrvac -i amrvac.par
 
  &filelist
-   base_filename    = 'output/kh_hlld'
+   base_filename    = 'output/kh_ref'
    saveprim         = T
    autoconvert      = F
  /
@@ -59,4 +59,8 @@
  &mhd_list
    mhd_n_tracer     = 1
    typedivbfix      = 'none'
+ /
+
+ &usr_list
+   seed_type        = 'random'
  /
