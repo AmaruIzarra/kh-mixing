@@ -1,0 +1,62 @@
+! KH mixing layer, Hillier & Arregui (2019) setup, 2.5D MHD
+! Compile: $AMRVAC_DIR/setup.pl -d=2 -v=3 && make -j 4
+! Run:     mkdir -p output && mpirun -np 4 ./amrvac -i amrvac.par
+
+ &filelist
+   base_filename    = 'output/kh_hlld'
+   saveprim         = T
+   autoconvert      = F
+ /
+
+ &savelist
+   itsave(1,1)      = 0
+   itsave(1,2)      = 0
+   dtsave_log       = 0.5d0
+   dtsave_dat       = 2.0d0
+ /
+
+ &stoplist
+   time_max         = 60.0d0
+ /
+
+ &methodlist
+   time_stepper     = 'fourstep'
+   flux_scheme      = 20*'hlld'
+   limiter          = 20*'cada3'
+ /
+
+ ! Variables with boundary conditions (8): rho, m1, m2, m3, e, b1, b2, b3
+ ! (AMRVAC gives the tracer no boundary condition of its own)
+ ! x: periodic.  y: reflecting wall -> mirror everything, flip sign of
+ ! the normal components (m2, b2) so nothing crosses the boundary.
+ &boundlist
+   typeboundary_min1 = 8*'periodic'
+   typeboundary_max1 = 8*'periodic'
+   typeboundary_min2 = 'symm','symm','asymm','symm','symm','symm','asymm','symm'
+   typeboundary_max2 = 'symm','symm','asymm','symm','symm','symm','asymm','symm'
+ /
+
+ ! Base grid 80 x 200, 2 levels -> effective 160 x 400 (the paper's x-y grid)
+ &meshlist
+   refine_max_level = 2
+   block_nx1        = 20
+   block_nx2        = 20
+   domain_nx1       = 80
+   domain_nx2       = 200
+   xprobmin1        = -0.4d0
+   xprobmax1        =  0.4d0
+   xprobmin2        = -1.5d0
+   xprobmax2        =  0.5d0
+   iprob            = 1
+ /
+
+ &paramlist
+   slowsteps        = 10
+   courantpar       = 0.8d0
+   typecourant      = 'maxsum'
+ /
+
+ &mhd_list
+   mhd_n_tracer     = 1
+   typedivbfix      = 'none'
+ /
