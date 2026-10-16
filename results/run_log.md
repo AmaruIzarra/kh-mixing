@@ -19,3 +19,9 @@
   Layer width 0.055 at t=2 (vs 0.175 tvdlf), ~0.96 by t = 60 (wider than box: 2D merging, geometric limit).
 - Conclusion: solver choice decides whether the instability exists at all at this resolution.
 - Files: results/hlld_cada3_growth.txt, figures/hlld_cada3_*.png
+- Profiles (t = 40-60 average): edges y = -0.642 / +0.278 (width 0.92, ~2x paper's)
+  asymmetry 2.32 (model 3.16), mean density 3.72 (model 3.16, paper 3.21),
+  mean-flow KE removed 0.32 (model 0.53, paper 0.58).
+  Mass check: 0.698*1 + 0.302*10 = 3.72, consistent with measured density.
+  Matches paper qualitatively: shift to light side, mean KE -> 0 in layer centre (y ~ -0.13)
+  where <rho> ~ sqrt(10). Quantitatively off: one box-sized 2D vortex dominates.

@@ -1,0 +1,7 @@
+Snapshot(s): t = 40-60
+Layer edges:            y_low = -0.642,  y_up = +0.278  (width 0.920)
+Asymmetry |y_low|/y_up:   2.32   model sqrt(rho2/rho1) = 3.16
+Mean density in layer:    3.72   model sqrt(rho1 rho2) = 3.16   (paper's simulation: 3.21)
+Mean-flow KE removed:     0.32   model 0.53, paper's simulation 0.58
+Layer zero-momentum frame velocity: +0.0100
+saved profiles.png
