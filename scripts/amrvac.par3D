@@ -1,0 +1,59 @@
+
+ !$AMRVAC_DIR/setup.pl -d=3 -v=3
+ &filelist
+   base_filename    = 'kh_3d'
+   autoconvert      = T
+   convert_type     = 'vtuBmpi'
+   saveprim         = T
+ /
+
+ &savelist
+   itsave(1,1)     = 0
+   itsave(1,2)     = 0
+   dtsave_log       = 0.01d0
+   dtsave_dat       = 0.01d0
+ /
+
+ &stoplist
+   time_max=0.3d0
+ /
+
+ &methodlist
+   time_stepper = 'threestep'
+   flux_scheme     = 20*'hlld'
+   limiter         = 20*'koren'
+ /
+
+ &boundlist
+   typeboundary_min1 = 8*'periodic'
+   typeboundary_max1 = 8*'periodic'
+   typeboundary_min2 = 8*'periodic'
+   typeboundary_max2 = 8*'periodic'
+   typeboundary_min3 = 8*'periodic'
+   typeboundary_max3 = 8*'periodic'
+ /
+
+ &meshlist
+   refine_max_level   = 2
+   block_nx1          = 10
+   block_nx2          = 10
+   block_nx3	      = 10
+   domain_nx1         = 30
+   domain_nx2         = 30
+   domain_nx3	      = 30
+   max_blocks	      = 3000
+
+   xprobmin1       = 0.0d0
+   xprobmax1       = 1.0d0
+   xprobmin2       = 0.0d0
+   xprobmax2       = 1.0d0
+   xprobmin3	   = 0.0d0
+   xprobmax3	   = 1.0d0
+   iprob=2 ! stronger velocity shear
+ /
+  
+ &paramlist
+   slowsteps        = 10
+   courantpar       = 0.005d0 ! much lower than as initially set
+   typecourant      = 'maxsum'
+ /
