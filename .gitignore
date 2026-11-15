@@ -29,3 +29,6 @@ local/
 3d_test_run/agile
 3d_test_run/config.mk
 *:Zone.Identifier
+3d_ref_run/build/
+3d_ref_run/agile
+3d_ref_run/config.mk

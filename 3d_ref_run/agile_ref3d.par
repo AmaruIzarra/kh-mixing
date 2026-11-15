@@ -1,0 +1,83 @@
+! AGILE: KH mixing layer, Hillier & Arregui (2019), full 3D MHD
+! REDUCED REFERENCE RUN: 80 x 208 x 400 cells (about half the paper's
+! resolution in each direction), run to t = 60 like the paper.
+! Compile: make -j 4 arch=gnu                 (laptop CPU)
+!          make -j 4 arch=nvidia OPENACC=1    (GPU)
+! Run:     mkdir -p output && mpirun -np 4 ./agile -i agile_ref3d.par
+
+ &filelist
+   base_filename    = 'output/kh3d_ref'
+   autoconvert      = F
+   convert_type     = 'vtuBCCmpi'
+   saveprim         = T
+ /
+
+ &savelist
+   itsave(1,1)      = 0
+   itsave(1,2)      = 0
+   dtsave_log       = 0.5d0
+   dtsave_dat       = 2.0d0      ! 31 snapshots, ~0.5 GB each
+ /
+
+ &stoplist
+   time_max         = 60.0d0
+ /
+
+ &methodlist
+   time_stepper     = 'fourstep'
+   flux_scheme      = 20*'hlld'
+   limiter          = 20*'koren'      ! AGILE has no cada3: minmod, vanleer, mcbeta or koren
+   phys             = 'mhd'
+ /
+
+ ! Variables with boundary conditions (8): rho, m1, m2, m3, e, b1, b2, b3
+ ! (tracer and the GLM variable psi get none of their own)
+ ! x, z: periodic.  y: reflecting walls (normal components m2, b2 flip sign)
+ &boundlist
+   typeboundary_min1 = 8*'periodic'
+   typeboundary_max1 = 8*'periodic'
+   typeboundary_min2 = 'symm','symm','asymm','symm','symm','symm','asymm','symm'
+   typeboundary_max2 = 'symm','symm','asymm','symm','symm','symm','asymm','symm'
+   typeboundary_min3 = 8*'periodic'
+   typeboundary_max3 = 8*'periodic'
+ /
+
+ ! Paper box: x in [-0.4,0.4], y in [-1.5,0.5], z in [-8,8].
+ ! domain_nx must be divisible by block_nx (16), so y uses 208 cells (not 200).
+ !   this run:   80 x 208 x 400   (dx = 0.0100, dy = 0.0096, dz = 0.04)  ~6.7 M cells
+ !   test:       32 x  80 x 160   (dx = dy = 0.025, dz = 0.1)
+ !   paper:     160 x 400 x 800   (dx = dy = 0.005, dz = 0.02)           ~51 M cells
+ ! This run has 5 x 13 x 25 = 1625 blocks. max_blocks = most blocks ONE process
+ ! (one GPU) may hold; it must be >= 1625 / (number of processes), with margin.
+ &meshlist
+   max_blocks       = 1024     ! enough for 2 or more processes
+   refine_max_level = 1
+   block_nx1        = 16
+   block_nx2        = 16
+   block_nx3        = 16
+   domain_nx1       = 80
+   domain_nx2       = 208
+   domain_nx3       = 400
+   xprobmin1        = -0.4d0
+   xprobmax1        =  0.4d0
+   xprobmin2        = -1.5d0
+   xprobmax2        =  0.5d0
+   xprobmin3        = -8.0d0
+   xprobmax3        =  8.0d0
+   iprob            = 1
+ /
+
+ &paramlist
+   slowsteps        = 10
+   courantpar       = 0.8d0
+   typecourant      = 'maxsum'
+ /
+
+ &mhd_list
+   mhd_n_tracer     = 1
+   mhd_gravity      = .false.
+ /
+
+ &usr_list
+   seed_type        = 'random'
+ /
