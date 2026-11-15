@@ -43,3 +43,13 @@ Results:
   threshold before one e-folding time. Use hlld (or test this deliberately for item 7).
 - A seed of 10 sine modes including the box-sized mode produces one box-sized vortex
   and a layer ~2x too wide; the paper's random noise is the reference choice.
+## 3D test: AGILE, paper setup, full 3D MHD (2026-11-15)
+- Folder: 3d_test_run/ (mod_usr.fpp, agile.par, Makefile). Built with AGILE (GPU fork of AMRVAC).
+- Same physics as the 2D reference but in 3D: box z in [-8, 8] (periodic), B along z,
+  dV = sqrt(0.1) (paper value), random seed in x, y AND z, tracer stored as rho*tracer.
+- Scheme: fourstep (ssprk4) + hlld + koren (AGILE has no cada3). 10 variables (incl. GLM psi).
+- Small test grid 32 x 80 x 160, 100 steps -> t = 0.37 in 133 s on 4 laptop cores
+  (3.1e5 cells/proc/s). Runs correctly; too short/coarse for physics.
+- Build: make -j 4 arch=gnu (CPU) or make -j 4 arch=nvidia OPENACC=1 (GPU).
+  Changing phys or mhd_n_tracer in agile.par requires recompiling.
+- Next: GPU timing (wICE or laptop RTX 4050), then production grid / time_max = 60.

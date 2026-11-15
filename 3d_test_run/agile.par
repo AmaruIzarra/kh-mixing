@@ -1,0 +1,86 @@
+! AGILE: KH mixing layer, Hillier & Arregui (2019), full 3D MHD
+! SMALL TEST GRID (32 x 80 x 160, 100 steps). For the real run, see the
+! commented "production" values in &meshlist, &stoplist and &savelist.
+! Compile: make -j 4 arch=gnu                 (laptop CPU)
+!          make -j 4 arch=nvidia OPENACC=1    (GPU)
+! Run:     mkdir -p output && mpirun -np 4 ./agile -i agile.par
+
+ &filelist
+   base_filename    = 'output/kh3d_paper'
+   autoconvert      = F
+   convert_type     = 'vtuBCCmpi'
+   saveprim         = T
+ /
+
+ &savelist
+   itsave(1,1)      = 0
+   itsave(1,2)      = 0
+   ditsave_log      = 10
+   ditsave_dat      = 50
+!  production: replace the two ditsave lines by
+!  dtsave_log       = 0.5d0
+!  dtsave_dat       = 2.0d0
+ /
+
+ &stoplist
+   it_max           = 100
+!  production: replace it_max by
+!  time_max         = 60.0d0
+ /
+
+ &methodlist
+   time_stepper     = 'fourstep'
+   flux_scheme      = 20*'hlld'
+   limiter          = 20*'koren'      ! AGILE has no cada3: minmod, vanleer, mcbeta or koren
+   phys             = 'mhd'
+ /
+
+ ! Variables with boundary conditions (8): rho, m1, m2, m3, e, b1, b2, b3
+ ! (tracer and the GLM variable psi get none of their own)
+ ! x, z: periodic.  y: reflecting walls (normal components m2, b2 flip sign)
+ &boundlist
+   typeboundary_min1 = 8*'periodic'
+   typeboundary_max1 = 8*'periodic'
+   typeboundary_min2 = 'symm','symm','asymm','symm','symm','symm','asymm','symm'
+   typeboundary_max2 = 'symm','symm','asymm','symm','symm','symm','asymm','symm'
+   typeboundary_min3 = 8*'periodic'
+   typeboundary_max3 = 8*'periodic'
+ /
+
+ ! Paper box: x in [-0.4,0.4], y in [-1.5,0.5], z in [-8,8].
+ ! domain_nx must be divisible by block_nx (16).
+ !   test:       32 x  80 x 160   (dx = dy = 0.025, dz = 0.1)
+ !   paper:     160 x 400 x 800   (dx = dy = 0.005, dz = 0.02)   ~51 M cells
+ ! max_blocks = most blocks one process (or GPU) may hold; paper grid: 12500 blocks in total
+ &meshlist
+   max_blocks       = 4096
+   refine_max_level = 1
+   block_nx1        = 16
+   block_nx2        = 16
+   block_nx3        = 16
+   domain_nx1       = 32
+   domain_nx2       = 80
+   domain_nx3       = 160
+   xprobmin1        = -0.4d0
+   xprobmax1        =  0.4d0
+   xprobmin2        = -1.5d0
+   xprobmax2        =  0.5d0
+   xprobmin3        = -8.0d0
+   xprobmax3        =  8.0d0
+   iprob            = 1
+ /
+
+ &paramlist
+   slowsteps        = 10
+   courantpar       = 0.8d0
+   typecourant      = 'maxsum'
+ /
+
+ &mhd_list
+   mhd_n_tracer     = 1
+   mhd_gravity      = .false.
+ /
+
+ &usr_list
+   seed_type        = 'random'
+ /

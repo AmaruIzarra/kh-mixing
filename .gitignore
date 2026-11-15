@@ -23,3 +23,9 @@ mod_usr.f
 # Keep final figures for the presentation
 !figures/*.png
 local/
+*:Zone.Identifier
+# AGILE build products and Windows download metadata
+3d_test_run/build/
+3d_test_run/agile
+3d_test_run/config.mk
+*:Zone.Identifier
