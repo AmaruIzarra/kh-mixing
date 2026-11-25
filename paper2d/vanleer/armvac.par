@@ -22,7 +22,7 @@
  &methodlist
    time_stepper     = 'fourstep'
    flux_scheme      = 20*'hlld'
-   limiter          = 20*'minmod'  !'cada3'
+   limiter          = 20*'vanleer'  !'cada3'
  /
 
  ! Variables with boundary conditions (8): rho, m1, m2, m3, e, b1, b2, b3
